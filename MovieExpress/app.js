@@ -1,42 +1,50 @@
-var createError = require('http-errors');
 const express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const { morganMiddleware, captureResponseBody } = require('./middleware/morganLogger');
+const logOriginalUrl = require('./middleware/logOriginalUrl');
+const knexMiddleware = require('./middleware/knexMiddleware');
+const notFoundHandler = require('./middleware/notFoundHandler');
+const errorHandler = require('./middleware/errorHandler');
 
-const routes = require('/routes');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const routes = require('./routes');
+//const indexRouter = require('./routes/index');
+//const usersRouter = require('./routes/users');
+//const moviesRouter = require('./routes/movies');
 
 const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use(logger('dev'));
+// Middleware
+app.use(captureResponseBody);
+app.use(morganMiddleware);
+//app.use(logOriginalUrl);
+//app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(knexMiddleware);
+// debugging
+app.use((req, res, next) => {
+  console.log('------- ROUTE DEBUGGING -------');
+  console.log('Full Request URL:', req.originalUrl);
+  console.log('Request Method:', req.method);
+  console.log('Base URL:', req.baseUrl);
+  console.log('Path:', req.path);
+  console.log('Request Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('------- END ROUTE DEBUGGING -------');
+  next();
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// View engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// Routes
+app.use('/', routes);
+
+// Error handling
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;

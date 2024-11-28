@@ -9,4 +9,5 @@ router.use('/user', usersRoutes);
 router.use('/movies', moviesRoutes);
 router.use('/posters', postersRoutes);
 
+console.log("Accessing: routes/index.js")
 module.exports = router;
