@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { renameKeys } = require('../../helper/helperFunctions')
 
-router.get('/', (req, res) => {
-    console.log("Default Search Route Reached");
-    res.json({ message: "Default search route" });
-});
 
 router.get('/:title', (req, res) => {
 
