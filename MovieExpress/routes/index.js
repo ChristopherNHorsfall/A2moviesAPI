@@ -5,7 +5,7 @@ const postersRoutes =require('./posters');
 
 const router = express.Router();
 
-router.use('/user', usersRoutes);
+router.use('/users', usersRoutes);
 router.use('/movies', moviesRoutes);
 router.use('/posters', postersRoutes);
 

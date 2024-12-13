@@ -6,6 +6,7 @@ const logOriginalUrl = require('./middleware/logOriginalUrl');
 const knexMiddleware = require('./middleware/knexMiddleware');
 const notFoundHandler = require('./middleware/notFoundHandler');
 const errorHandler = require('./middleware/errorHandler');
+require("dotenv").config();
 
 const routes = require('./routes');
 //const indexRouter = require('./routes/index');
@@ -25,14 +26,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(knexMiddleware);
 // debugging
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 app.use((req, res, next) => {
-  console.log('------- ROUTE DEBUGGING -------');
-  console.log('Full Request URL:', req.originalUrl);
-  console.log('Request Method:', req.method);
-  console.log('Base URL:', req.baseUrl);
-  console.log('Path:', req.path);
-  console.log('Request Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('------- END ROUTE DEBUGGING -------');
+//  console.log('------- ROUTE DEBUGGING -------');
+//  console.log('Full Request URL:', req.originalUrl);
+//  console.log('Request Method:', req.method);
+//  console.log('Base URL:', req.baseUrl);
+//  console.log('Path:', req.path);
+//  console.log('Request Headers:', JSON.stringify(req.headers, null, 2));
+//  console.log('------- END ROUTE DEBUGGING -------');
   next();
 });
 
