@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
+// register route
 router.post('/', (req, res, next) => {
     // Retrieve email and password from req.body
     const email = req.body.email;
@@ -12,7 +13,7 @@ router.post('/', (req, res, next) => {
     if (!email || !password) {
         res.status(400).json({
             error: true,
-            message: 'Request body incomplete - email and password needed'
+            message: 'Request body incomplete, both email and password are required'
         });
         return;
     }
@@ -23,8 +24,8 @@ router.post('/', (req, res, next) => {
         .where('email', '=', email)
         .then(users => {
             if (users.length > 0) {
-                console.log("User already exists");
-                res.status(400).json({
+                //console.log("User already exists");
+                res.status(409).json({
                     error: true,
                     message: 'User already exists'
                 });

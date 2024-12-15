@@ -15,7 +15,7 @@ router.post('/', (req, res, next) => {
   if (!email || !password) {
     res.status(400).json ({
       error: true,
-      message: "Request body incomplete - email and password needed"
+      message: "Request body incomplete, both email and password are required"
     });
   return;
   }
